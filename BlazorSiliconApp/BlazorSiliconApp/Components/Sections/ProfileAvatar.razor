@@ -1,0 +1,77 @@
+﻿@attribute [StreamRendering]
+
+@if (user == null)
+{
+    <p> Loding.....</p>
+}
+else
+{
+
+    <section id="account-profile">
+        <div class="profile">
+            <div class="profile-image">
+                <img src="/Images/uploads/profiles/@user.ProfileImage" alt="@user.FirstName @user.LastName" />
+                <EditForm Model="@user" OnValidSubmit="HandleUpload" >
+                    <InputFile id="fileUploader" OnChange="HandleSelected" hidden/>
+                    <label for="fileUploader" class="btn-gray btn-circle btn-circle-sm">
+                        <i class="fa-regular fa-refresh"></i>
+                    </label>
+                </EditForm>
+            </div>
+            <div class="profile-info">
+                <h3 class="displayname">@user.FirstName @user.LastName</h3>
+                <p>@user.Email</p>
+            </div>
+        </div>
+    </section>
+
+}
+
+@code {
+    private ApplicationUser user = default!;
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+    private IBrowserFile selectedFile;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await LoadUserDataAsync();
+    }
+
+    private async Task<ApplicationUser> LoadUserDataAsync()
+    {
+        return await UserManager.GetUserAsync(HttpContext.User) ?? new ApplicationUser();
+    }
+
+    private void HandleSelected(InputFileChangeEventArgs e)
+    {
+        selectedFile = e.File;
+    }
+
+    private async Task HandleUpload()
+    {
+        if (selectedFile != null)
+        {
+            var content = new MultipartFormDataContent();
+            var fileContent = new StreamContent(selectedFile.OpenReadStream());
+            fileContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(selectedFile.ContentType);
+            content.Add(fileContent, "file", selectedFile.Name);
+
+            try
+            {
+                var response = await Http.PostAsync("http://fileprovider-win23jsbackand.azurewebsites.net/api/upload", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    user = await LoadUserDataAsync();
+                    StateHasChanged();
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+        }
+    }
+}

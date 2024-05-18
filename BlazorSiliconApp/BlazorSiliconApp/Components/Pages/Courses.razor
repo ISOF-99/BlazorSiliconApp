@@ -1,0 +1,95 @@
+﻿@page "/courses"
+
+@attribute [StreamRendering]
+@attribute [Authorize]
+
+
+<PageTitle>Coruses</PageTitle>
+
+<section class="courses">
+    <div class="container">
+        <h1>Courses</h1>
+        <form id="form-filters">
+            <select>
+                <option>All categories</option>
+            </select>
+            <div class=" input-search-group">
+                <input id=" searchQuery" name="searchQuery" placeholder="Search courses" />
+                <i class="fa-regular fa-search"></i>
+            </div>
+        </form>
+        <div class="course-items">
+            @if (courses == null)
+            {
+                <p> <em> Loading .....</em></p>
+            }
+            else
+            {
+                @foreach (var course in courses)
+                {
+                    <a class="course" asp-action="Detalis" asp-controller="Courses" asp-route-id="@course.Id">
+                        @if (course.IsBestseller)
+                        {
+                            <div class="bestseller"> Best seller</div>
+                        }
+                        <button> class="btn btn-circle bookmark"><i class="fa-regular fa-bookmark"></i></button>
+                        <img src="~/Images/courses/@course.Image" alt="@course.Title" />
+                        <div class="content">
+                            <h5 class="title">@course.Title</h5>
+                            <p class="author">By @course.Auther</p>
+                            <div class="pricing">
+                                @if (!string.IsNullOrEmpty(course.DiscountPrise))
+                                {
+                                    <div class="discount"> @course.DiscountPrise</div>
+                                }
+                                <div class="price @(!string .IsNullOrEmpty(course.DiscountPrise)? "discount-enabled":"")">@course.Prise</div>
+                            </div>
+                            <div class="footer">
+                                <div class="hours">
+                                    <i class="fa-regular fa-clock"></i> @course.Hours
+                                </div>
+                                <div class="likes">
+                                    <i class="fa-regular fa-thumbs-up"></i> @course.LikeInProcent (@course.LiksInNumbers)
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+</section>
+
+
+@code {
+    private CourseModel[]? courses;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        try
+        {
+            courses = await Http.GetFromJsonAsync<CourseModel[]>("coruseprovider-win23jsbackend-alsalam.azurewebsites.net/api.courses");
+        }
+        catch (Exception ex){}
+      
+
+    }
+
+    private class CourseModel
+    {
+        public int Id { get; set; }
+        public bool IsBestseller { get; set; }
+        public string Image { get; set; } = null!;
+        public string Title { get; set; } = null!;
+        public string Auther { get; set; } = null!;
+        public string Prise { get; set; } = null!;
+
+        public string? DiscountPrise { get; set; }
+        public string Hours { get; set; } = null!;
+        public string LikeInProcent { get; set; } = null!;
+        public string LiksInNumbers { get; set; } = null!;
+    }
+}

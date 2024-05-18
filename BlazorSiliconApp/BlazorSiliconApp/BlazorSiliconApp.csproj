@@ -1,0 +1,101 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-BlazorSiliconApp-58b9f243-4738-4920-b5e7-559b5daa85b7</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
+    <None Include="wwwroot\scss\components\_alerts.scss" />
+    <None Include="wwwroot\scss\components\_buttons.scss" />
+    <None Include="wwwroot\scss\components\_containers.scss" />
+    <None Include="wwwroot\scss\components\_forms.scss" />
+    <None Include="wwwroot\scss\components\_links.scss" />
+    <None Include="wwwroot\scss\components\_other.scss" />
+    <None Include="wwwroot\scss\core\_base.scss" />
+    <None Include="wwwroot\scss\core\_buttons.scss" />
+    <None Include="wwwroot\scss\core\_colors.scss" />
+    <None Include="wwwroot\scss\core\_fonts.scss" />
+    <None Include="wwwroot\scss\core\_links.scss" />
+    <None Include="wwwroot\scss\core\_media.scss" />
+    <None Include="wwwroot\scss\core\_mixins.scss" />
+    <None Include="wwwroot\scss\core\_typography.scss" />
+    <None Include="wwwroot\scss\core\_varables.scss" />
+    <None Include="wwwroot\scss\sections\_cookiesconsent.scss" />
+    <None Include="wwwroot\scss\sections\_courses.scss" />
+    <None Include="wwwroot\scss\sections\_details.scss" />
+    <None Include="wwwroot\scss\sections\_download_app.scss" />
+    <None Include="wwwroot\scss\sections\_features.scss" />
+    <None Include="wwwroot\scss\sections\_footer.scss" />
+    <None Include="wwwroot\scss\sections\_header.scss" />
+    <None Include="wwwroot\scss\sections\_integrate_tools.scss" />
+    <None Include="wwwroot\scss\sections\_isection3.scss" />
+    <None Include="wwwroot\scss\sections\_manage_work.scss" />
+    <None Include="wwwroot\scss\sections\_showcase.scss" />
+    <None Include="wwwroot\scss\sections\_signin.scss" />
+    <None Include="wwwroot\scss\sections\_signup.scss" />
+    <None Include="wwwroot\scss\sections\_subscribe_to_newsletter.scss" />
+    <None Include="wwwroot\scss\sections\_switch.scss" />
+    <None Include="wwwroot\scss\_components.scss" />
+    <None Include="wwwroot\scss\_core.scss" />
+    <None Include="wwwroot\scss\_sections.scss" />
+    <None Include="wwwroot\site.scss" />
+    <None Include="wwwroot\images\arrows.svg" />
+    <None Include="wwwroot\images\brand_1.svg" />
+    <None Include="wwwroot\images\brand_2.svg" />
+    <None Include="wwwroot\images\brand_3.svg" />
+    <None Include="wwwroot\images\brand_4.svg" />
+    <None Include="wwwroot\images\chat-icon.svg" />
+    <None Include="wwwroot\images\Courses\course_1.svg" />
+    <None Include="wwwroot\images\Courses\course_2.svg" />
+    <None Include="wwwroot\images\Courses\course_3.svg" />
+    <None Include="wwwroot\images\Courses\course_4.svg" />
+    <None Include="wwwroot\images\Courses\course_5.svg" />
+    <None Include="wwwroot\images\Courses\course_6.svg" />
+    <None Include="wwwroot\images\Courses\course_7.svg" />
+    <None Include="wwwroot\images\Courses\course_8.svg" />
+    <None Include="wwwroot\images\Courses\course_9.svg" />
+    <None Include="wwwroot\images\data-icon.svg" />
+    <None Include="wwwroot\images\icons\appstore.svg" />
+    <None Include="wwwroot\images\icons\dropbox.svg" />
+    <None Include="wwwroot\images\icons\evernote.svg" />
+    <None Include="wwwroot\images\icons\gmail.svg" />
+    <None Include="wwwroot\images\icons\google.svg" />
+    <None Include="wwwroot\images\icons\googleplay.svg" />
+    <None Include="wwwroot\images\icons\Group2103.svg" />
+    <None Include="wwwroot\images\icons\iPhone12Pro.svg" />
+    <None Include="wwwroot\images\icons\mailChimp.svg" />
+    <None Include="wwwroot\images\icons\manageYour.svg" />
+    <None Include="wwwroot\images\icons\master.svg" />
+    <None Include="wwwroot\images\icons\slack.svg" />
+    <None Include="wwwroot\images\icons\trello.svg" />
+    <None Include="wwwroot\images\icons\zoom.svg" />
+    <None Include="wwwroot\images\image.svg" />
+    <None Include="wwwroot\images\MacBook Pro-dark.svg" />
+    <None Include="wwwroot\images\MacBook Pro-light.svg" />
+    <None Include="wwwroot\images\mockup.svg" />
+    <None Include="wwwroot\images\multi-icon.svg" />
+    <None Include="wwwroot\images\noti-icon.svg" />
+    <None Include="wwwroot\images\pres-icon.svg" />
+    <None Include="wwwroot\images\section-icon.svg" />
+    <None Include="wwwroot\images\showcase.svg" />
+    <None Include="wwwroot\images\silicon-logo-light_theme.svg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorSiliconApp.Client\BlazorSiliconApp.Client.csproj" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.2" />
+  </ItemGroup>
+
+</Project>

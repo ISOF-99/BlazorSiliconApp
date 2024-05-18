@@ -1,0 +1,186 @@
+﻿@page "/signup"
+
+@using System.ComponentModel.DataAnnotations
+@using System.Text
+@using System.Text.Encodings.Web
+@using Infrastructure.Helpers
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.WebUtilities
+@using BlazorSiliconApp.Data
+@using Microsoft.EntityFrameworkCore
+
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject ILogger<Register> Logger
+@inject NavigationManager NavigationManager
+
+
+<PageTitle>Sing up</PageTitle>
+
+
+<section id="signup">
+    <div class="container">
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <div class="alert alert-danger">
+                @ErrorMessage
+
+            </div>
+        }
+        <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="signup">
+
+            <DataAnnotationsValidator />
+           
+            <h1>Create Account</h1>
+            <p>Already have an account? <a href="signin"> Sign in here</a>.</p>
+            <div class="content">
+               
+                
+                <div id="form-firstname" class=" input-group">
+                    <label>First name</label>
+                    <InputText @bind-Value="Input.FirstName" class="form-control" autocomplete="givenname" aria-required="true" placeholder="First name" />
+                    <ValidationMessage For="() => Input.FirstName" class="text-danger" />
+                   
+                </div>
+                
+                
+                
+                <div id="form-lastname" class=" input-group">
+                    <label>Last name</label>
+                    <InputText @bind-Value="Input.LastName" class="form-control" autocomplete="surname" aria-required="true" placeholder="Last name" />
+                    <ValidationMessage For="() => Input.LastName" class="text-danger" />
+                </div>
+
+                
+                
+                
+                
+                <div id="form-email" class=" input-group">
+                    <label>Email</label>
+                    <InputText typeof="email" @bind-Value="Input.Email" class="form-control" autocomplete="givenname" aria-required="true" placeholder=" Enter your  email " />
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+
+                
+                
+                
+                
+                <div id="form-password" class=" input-group">
+                    <label>Password</label>
+                    <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="password" aria-required="true" placeholder=" Enter your  password " />
+                    <ValidationMessage For="() => Input.Password" class="text-danger" />
+                </div>
+
+                <div id="form-confirm" class=" input-group">
+                    <label>Confirmp Password</label>
+                    <InputText type="password" @bind-Value="Input.ConfirmPassword" class="form-control" autocomplete="password" aria-required="true" placeholder=" Enter your  Confirmp Password " />
+                    <ValidationMessage For="() => Input.ConfirmPassword" class="text-danger" />
+                </div>
+
+                <div id="form-terms" class=" checkbox-group">
+                    <InputCheckbox @bind-Value="Input.Terms" class="form-control" autocomplete="terms" aria-required="true"/>
+                    <label>I accept the Terms and Condition</label>
+                    <ValidationMessage For="()=>Input.Terms"/>
+                </div>
+                <button class="btn-theme-s" type="submit">Sign up </button>
+
+            </div>
+
+        </EditForm>
+    </div>
+</section>
+
+
+
+
+
+
+@code {
+    private string? ErrorMessage { get; set; }
+    [SupplyParameterFromForm]
+    private InputModel Input { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+
+
+    public async Task RegisterUser(EditContext editContext)
+    {
+        var user = new ApplicationUser 
+            { 
+                FirstName = Input.FirstName,
+                LastName = Input.LastName,
+                UserName = Input.Email, 
+                Email = Input.Email 
+            };
+
+        if (await UserManager.Users.AnyAsync(x => x.Email == user.Email))
+        {
+            ErrorMessage = "Email is alrady use";
+
+        }
+
+            var result = await UserManager.CreateAsync(user, Input.Password);
+
+            if (!result.Succeeded)
+                return;
+
+            if (UserManager.Options.SignIn.RequireConfirmedAccount)
+            {
+                NavigationManager.NavigateTo($"/confirm?email={user.Email}");
+               
+            }
+
+        await SignInManager.SignInAsync(user, isPersistent: false);
+        NavigationManager.NavigateTo(ReturnUrl ?? "/");
+    }
+
+
+
+    private sealed class InputModel
+    {
+
+        [DataType(DataType.Text)]
+        [Display(Name = "First name")]
+        [Required(ErrorMessage = "Invalid first name")]
+        [MinLength(2, ErrorMessage = "Enter a first name")]
+        public string FirstName { get; set; } = null!;
+
+
+
+        [DataType(DataType.Text)]
+        [Display(Name ="Lats name")]
+        [Required(ErrorMessage = "Invalid Last name")]
+        [MinLength(2, ErrorMessage = "Enter a LastName")]
+        public string LastName { get; set; } = null!;
+
+
+        [Required]
+        [EmailAddress]
+        [Display(Name = "Email")]
+        public string Email { get; set; } = "";
+
+        [Required]
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Password")]
+        public string Password { get; set; } = "";
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm password")]
+        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        public string ConfirmPassword { get; set; } = "";
+
+
+        [RequiredCheckbox(ErrorMessage = "Terms And conditions must be accepted")]
+        public bool Terms { get; set; } = false;
+    }
+}
+
+
+
+
+
+
