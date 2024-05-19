@@ -31,7 +31,7 @@ else
     private ApplicationUser user = default!;
     [CascadingParameter]
     private HttpContext HttpContext { get; set; } = default!;
-    private IBrowserFile selectedFile;
+    private IBrowserFile? selectedFile;
 
     protected override async Task OnInitializedAsync()
     {
@@ -59,7 +59,7 @@ else
 
             try
             {
-                var response = await Http.PostAsync("http://fileprovider-win23jsbackand.azurewebsites.net/api/upload", content);
+                var response = await Http.PostAsync(Environment.GetEnvironmentVariable("FILERPROVIDER_UPLOAD_URI"), content);
 
                 if (response.IsSuccessStatusCode)
                 {

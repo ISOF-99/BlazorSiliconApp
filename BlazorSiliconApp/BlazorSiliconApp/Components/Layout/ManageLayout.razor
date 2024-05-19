@@ -15,3 +15,21 @@
 </section>
 
 
+@code{
+
+    [CascadingParameter]
+    private ApplicationUser user { get; set; } = default!;
+
+    [CascadingParameter]
+    private HttpContent HttpContent { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserDataAsync();
+    }
+    private async Task LoadUserDataAsync()
+    {
+        
+    }
+
+}
