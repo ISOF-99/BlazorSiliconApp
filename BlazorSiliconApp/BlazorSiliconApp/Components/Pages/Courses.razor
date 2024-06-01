@@ -1,95 +1,123 @@
 ﻿@page "/courses"
+@using Microsoft.AspNetCore.Mvc
+@using WebApp.Buiness.Models
+@using static System.Net.WebRequestMethods
+@attribute [AutoValidateAntiforgeryToken]
 
 @attribute [StreamRendering]
-@attribute [Authorize]
+
+@inject HttpClient Http
 
 
-<PageTitle>Coruses</PageTitle>
+<PageTitle>Courses</PageTitle>
 
 <section class="courses">
     <div class="container">
-        <h1>Courses</h1>
-        <form id="form-filters">
-            <select>
-                <option>All categories</option>
-            </select>
-            <div class=" input-search-group">
-                <input id=" searchQuery" name="searchQuery" placeholder="Search courses" />
-                <i class="fa-regular fa-search"></i>
-            </div>
-        </form>
+        <div class="header">
+            <h1>Courses</h1>
+            <form id="form-filters">
+                <select>
+                    <option>All categories</option>
+                </select>
+                <div class="input-search-group">
+                    <input id="searchQuery" name="searchQuery" placeholder="Search courses" />
+                    <i class="fa-regular fa-search"></i>
+                </div>
+            </form>
+        </div>
         <div class="course-items">
             @if (courses == null)
             {
-                <p> <em> Loading .....</em></p>
+                <div><i class="fa-sharp fa-solid fa-spinner-third fa-spin"></i></div>
             }
             else
             {
                 @foreach (var course in courses)
                 {
-                    <a class="course" asp-action="Detalis" asp-controller="Courses" asp-route-id="@course.Id">
+                    var link = $"courses/details/{course.Id}";
+                    <a class="course" href="@link" asp-route-id="@course.Id">
                         @if (course.IsBestseller)
                         {
-                            <div class="bestseller"> Best seller</div>
+                            <div class="bestseller">Best Seller</div>
                         }
-                        <button> class="btn btn-circle bookmark"><i class="fa-regular fa-bookmark"></i></button>
-                        <img src="~/Images/courses/@course.Image" alt="@course.Title" />
+                        <span class="btn btn-circle bookmark"><i class="fa-regular fa-bookmark"></i></span>
+                        <img src="@course.ImageUri" alt="@course.Title" />
                         <div class="content">
                             <h5 class="title">@course.Title</h5>
-                            <p class="author">By @course.Auther</p>
+                            <p class="author">By @course.Author</p>
                             <div class="pricing">
-                                @if (!string.IsNullOrEmpty(course.DiscountPrise))
+                                @if (!string.IsNullOrEmpty(course.DiscountPrice))
                                 {
-                                    <div class="discount"> @course.DiscountPrise</div>
+                                    <div class="discount">@course.DiscountPrice</div>
                                 }
-                                <div class="price @(!string .IsNullOrEmpty(course.DiscountPrise)? "discount-enabled":"")">@course.Prise</div>
+                                <div class="price @(!string.IsNullOrEmpty(course.DiscountPrice) ? "discount-enabled" : "")">@course.Price</div>
                             </div>
                             <div class="footer">
                                 <div class="hours">
-                                    <i class="fa-regular fa-clock"></i> @course.Hours
+                                    <i class="fa-regular fa-clock"></i> @course.Hours hours
                                 </div>
                                 <div class="likes">
-                                    <i class="fa-regular fa-thumbs-up"></i> @course.LikeInProcent (@course.LiksInNumbers)
+                                    <i class="fa-regular fa-thumbs-up"></i> @course.LikesInProcent (@course.LikesInNumbers)
                                 </div>
-
                             </div>
                         </div>
                     </a>
                 }
             }
         </div>
+        <div class="pagination">
+            <i class="fa-solid fa-less-than"></i>
+            <a class="number active" href="/courses">1</a>
+            <a class="number" href="/courses">2</a>
+            <a class="number" href="/courses">3</a>
+            <i class="fa-solid fa-greater-than"></i>
+        </div>
+        <div class="work-section">
+            <div class="work-text">
+                <h5>Ready to get Started?</h5>
+                <h1>Take Your <span class="header-skills">Skills</span> to the <br>Next Level</h1>
+                <button class="btn-theme-s">Work with us</button>
+            </div>
+            <div class="work-img">
+                <img src="~/images/work-image.svg" alt="">
+            </div>
+        </div>
     </div>
-
 </section>
 
 
 @code {
-    private CourseModel[]? courses;
+    private List<CourseCardModel>? courses;
+
+
 
     protected override async Task OnInitializedAsync()
     {
+        var query = new GraphQLQuery { Query = "{ getCourses { id isBestseller prices { price discount } authors { name } categories { title } } }" };
+        var response = await Http.PostAsJsonAsync("http://localhost:7156/api/graphql", query);
 
-        try
+        if (response.IsSuccessStatusCode)
         {
-            courses = await Http.GetFromJsonAsync<CourseModel[]>(Environment.GetEnvironmentVariable("COURSES_APIURI"));
+            var result = await response.Content.ReadFromJsonAsync<DynamicGraphQLResponse>();
+            courses = result?.Data.GetProperty("getCourses").EnumerateArray()
+                .Select(course => new CourseCardModel
+                    {
+                        Id = course.GetProperty("id").GetString(),
+                        IsBestseller = course.GetProperty("isBestseller").GetBoolean(),
+                        ImageUri = course.GetProperty("imageUri").GetString(),
+                        Title = course.GetProperty("title").GetString(),
+                        Author = course.GetProperty("authors")[0].GetProperty("name").GetString(),
+                        Price = $"{course.GetProperty("prices").GetProperty("currency").GetDecimal()} {course.GetProperty("prices").GetProperty("price").GetDouble()}",
+                        DiscountPrice = course.GetProperty("prices").GetProperty("discount").GetDouble() > 0
+                            ? $"{course.GetProperty("prices").GetProperty("currency").GetString()} {course.GetProperty("prices").GetProperty("price").GetDouble() - course.GetProperty("prices").GetProperty("discount").GetDouble()}"
+                            : null,
+
+                        Hours = course.GetProperty("hours").ToString(),
+                        LikesInProcent = course.GetProperty("likesInProcent").GetString(),
+                        LikesInNumbers = course.GetProperty("likes").GetString()
+                    })
+                    .ToList();
         }
-        catch (Exception ex){}
-      
-
     }
 
-    private class CourseModel
-    {
-        public int Id { get; set; }
-        public bool IsBestseller { get; set; }
-        public string Image { get; set; } = null!;
-        public string Title { get; set; } = null!;
-        public string Auther { get; set; } = null!;
-        public string Prise { get; set; } = null!;
-
-        public string? DiscountPrise { get; set; }
-        public string Hours { get; set; } = null!;
-        public string LikeInProcent { get; set; } = null!;
-        public string LiksInNumbers { get; set; } = null!;
-    }
 }

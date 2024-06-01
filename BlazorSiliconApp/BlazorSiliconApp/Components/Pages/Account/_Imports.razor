@@ -1,3 +1,13 @@
 ﻿@using BlazorSiliconApp.Components.Layout
 @layout ManageLayout
 @attribute [Microsoft.AspNetCore.Authorization.Authorize]
+
+@using BlazorSiliconApp.Components.Sections
+
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager NavigationManager
+@inject ApplicationDbContext context
+@inject HttpClient Http
+@using System.Security.Claims
+@using System.Diagnostics

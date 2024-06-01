@@ -1,21 +1,16 @@
-﻿@inherits LayoutComponentBase
+﻿@using BlazorSiliconApp.Components.Sections
+@inherits LayoutComponentBase
 @layout AccountLayout
 
-<section class="account-details">
+@Body
+
+<section id="account-details">
     <div class="container">
-        <aside>
-            <partial name="/"/>
-            <BlazorSiliconApp.Components.Sections.ProfileAvatar/>
-            <ManageNavMenu />
-        </aside>
-        <div class="content">
-            @Body
-        </div>
+        @Body
     </div>
 </section>
 
-
-@code{
+@* @code {
 
     [CascadingParameter]
     private ApplicationUser user { get; set; } = default!;
@@ -29,7 +24,7 @@
     }
     private async Task LoadUserDataAsync()
     {
-        
+
     }
 
-}
+} *@

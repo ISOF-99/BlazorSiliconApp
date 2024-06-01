@@ -1,26 +1,39 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using BlazorSiliconApp.Data
 
+@rendermode InteractiveServer
+
 @inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
+@inject IHttpContextAccessor HttpContextAccessor
 
-    @rendermode InteractiveAuto
 
-<ul class="account-profile">
+ 
+
+<aside>
+    <div class="profile-info">
+        <CascadingValue Value="HttpContextAccessor.HttpContext">
+            <ProfileAvatar />
+        </CascadingValue>
+        <h3>@User?.FirstName @User?.LastName</h3>
+        <p>@User?.Email</p>
+    </div>
     <nav>
-        <NavLink class="btn-theme-s" href="/account/details"> <i class="fa-sharp fa-regular fa-gear"></i> Account Details</NavLink>
-        <NavLink @onclick="HandleSinOut" class="btn-gray"><i class="fa-duotone fa-arrow-right-from-bracket"></i> Sign out</NavLink>
+        <NavLink class="btn-theme-s href="account/details" ActiveClass="btn-theme-s"> Account details</NavLink>
+        <NavLink class="btn-theme-s href="account/security" ActiveClass="btn-theme-s">Security</NavLink>
+        <NavLink class="btn-theme-s href="account/saved-courses"  ActiveClass="btn-theme-s">Saved Courses</NavLink>
+        <button class="btn-theme-s" @onclick="NavigateToSignOut">Sign Out</button>
     </nav>
-</ul>
+</aside>
 
 @code {
-    private bool hasExternalLogins;
+    [Parameter]
+    public ApplicationUser? User { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private void NavigateToSignOut()
     {
-        hasExternalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).Any();
-    }
-    private Task HandleSinOut(MouseEventArgs e)
-    {
-        throw new NotImplementedException();
+        NavigationManager.NavigateTo("/signout");
     }
 }

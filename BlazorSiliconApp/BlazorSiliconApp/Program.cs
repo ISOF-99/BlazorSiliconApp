@@ -1,29 +1,44 @@
 using BlazorSiliconApp;
+using BlazorSiliconApp.ChatHuben;
 using BlazorSiliconApp.Client.Pages;
 using BlazorSiliconApp.Components;
 using BlazorSiliconApp.Data;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+//var keyVaultEndpoint = new Uri(Environment.GetEnvironmentVariable("VaultUri")!);
+//builder.Configuration.AddAzureKeyVault(keyVaultEndpoint, new DefaultAzureCredential());
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
-builder.Services.AddCascadingAuthenticationState();
-builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 builder.Services.AddHttpClient();
 
+builder.Services.AddHttpClient();
+builder.Services.AddCascadingAuthenticationState();
+//builder.Services.AddScoped<IdentityUserAccessor>();
+//builder.Services.AddScoped<IdentityRedirectManager>();
+builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = IdentityConstants.ApplicationScheme;
-        options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-    })
+{
+    options.DefaultScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+})
     .AddIdentityCookies();
-
+// Configure application cookie settings
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/signin"; // Path to the login page
+    options.AccessDeniedPath = "/accessdenied"; // Path to the access denied page
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60); // Adjust as necessary
+});
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
@@ -34,24 +49,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.ConfigureApplicationCookie(x =>
-{
-    x.LoginPath = "/signin";
-    x.AccessDeniedPath = "/denied";
-    x.Cookie.HttpOnly = true;
-    x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    x.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    x.SlidingExpiration = true;
-});
-builder.Services.AddAuthorization( x =>
-{
-    x.AddPolicy("SuperAdmin", policy => policy.RequireRole("SuperAdmin"));
-    x.AddPolicy("CIO", policy => policy.RequireRole("SuperAdmin", "CIO"));
-    x.AddPolicy("Admins", policy => policy.RequireRole("Admin", "SuperAdmin"));
-    x.AddPolicy("Manegar", policy => policy.RequireRole("SuperAdmin", "CIO", "Admin", "Manegar", "User"));
-    x.AddPolicy("AuthenticatedUsers", policy => policy.RequireRole("SuperAdmin", "CIO", "Admin", "User"));
-
-});
 
 var app = builder.Build();
 
@@ -78,6 +75,7 @@ app.MapRazorComponents<App>()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(BlazorSiliconApp.Client._Imports).Assembly);
 
-
+//Register custom identity endpoints
+//app.MapAdditionalIdentityEndpoints();
 
 app.Run();
