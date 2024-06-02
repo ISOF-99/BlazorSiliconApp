@@ -1,4 +1,4 @@
-﻿form {
+form {
     width: 100%;
     display: grid;
 
@@ -6,92 +6,66 @@
         display: grid;
     }
 
-    .checkbox {
-        span {
-            &.field-validation-error {
-                position: static;
-                top: 0;
-                right: 0;
-                @include text-s;
-                color: $danger;
-            }
-        }
-    }
-
     .checkbox-group {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        gap: 0.5rem;
+        gap: 1rem;
+
+        .field-validation-error {
+            border: 2px solid red;
+            background-color: #FFE6E6;
+            color: #FF0000;
+            animation: blinker 1s linear infinite;
+        }
 
 
-        input[type="checkbox"] {
+
+
+        input [type="checkbox"] {
             height: 1.2rem;
             width: 1.2rem;
-            border: 0.063rem solid red;
         }
 
         label {
-            margin: 0;
+            margin: 0px;
             font-weight: 400;
+        }
+
+        .input-validation-error {
+            border: 2px solid red;
+            background-color: #FFE6E6;
         }
     }
 
     label {
-        margin-bottom: 0.188rem;
+        margin-bottom: 3px;
         font-weight: 700;
     }
 
     input {
         padding: 1rem;
-        border-radius: 0.5rem !important;
-        border: 0.063rem solid $gray-400;
+        border-radius: 8px !important;
+ /*       border: 1px solid $gray-400;*/
 
         &::placeholder {
-            opacity: 0.4;
+            opacity: 0,4;
         }
+
 
         &.input-validation-error {
-            border-color: $danger !important;
-            color: $danger;
+            border: 2px solid red;
+            background-color: #FFE6E6;
+            color: #FF0000;
 
             &::placeholder {
-                color: $danger;
-            }
-        }
-
-        &:focus {
-            border-color: $danger !important;
-        }
-    }
-
-    textarea {
-        padding: 1rem;
-        border-radius: 0.5rem !important;
-        border: 0.063rem solid $gray-400;
-        resize: none;
-
-        &::placeholder {
-            opacity: 0.4;
-        }
-
-        &.input-validation-error {
-            border: 0.063rem solid $danger !important;
-            color: $danger;
-
-            &::placeholder {
-                color: $danger;
+                color: #FF0000;
             }
         }
     }
 
-    span {
-        &.field-validation-error, validation-message {
-            position: absolute;
-            top: 0;
-            right: 0;
-            @include text-s;
-            color: $danger;
-        }
+    .field-validation-error {
+        color: red;
+        font-size: 14px;
     }
 }
