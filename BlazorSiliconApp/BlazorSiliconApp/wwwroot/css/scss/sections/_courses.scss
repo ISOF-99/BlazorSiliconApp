@@ -1,164 +1,127 @@
-section {
-    &.courses {
-        .container {
-            .header-courses {
-                margin-top: 30px;
-                display: grid;
-                grid-template-columns: 1fr auto;
-                grid-template-areas: "h1 h1 category search";
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 30px;
+.courses {
+    padding-top: 3rem;
+    padding-bottom: 5rem;
 
-                h1 {
-                    grid-area: h1;
+    .container {
+        #form-filters {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 1.5rem;
 
-                    @media (max-width: 992px ) {
-                        display: none;
-                    }
-                }
-
-                .categorylist {
-                    grid-area: category;
-                    border: 1px solid #DAD9D3;
-                    padding: 8px;
-                    border-radius: 15px;
-                    margin-right: 20px;
-
-                    @media (max-width: 768px) {
-                        display: none;
-                    }
-
-                    form {
-
-                        select {
-                            color: #191919;
-                            text-decoration: none;
-                            outline: none;
-                            border: transparent;
-                            margin-right: 50px;
-
-
-                        }
-                    }
-                }
-
-                .search-form {
-                    grid-area: search;
-                    border: 1px solid #DAD9D3;
-                    padding: 8px;
-                    border-radius: 15px;
-
-                    form {
-
-                        input {
-                            color: #191919;
-                            text-decoration: none;
-                            outline: none;
-                            border: transparent;
-                            margin-right: 50px;
-                        }
-                    }
-                }
+            select {
             }
 
-            .course-content {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                grid-gap: 20px;
+            .input-serach-group {
+            }
+        }
 
-                .course {
-                    position: relative;
+        h1 {
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .course-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .course {
+            position: relative;
+            display: block;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            box-shadow: 0 0 14px -4px var(--color-gray-500);
+            color: var(--color-gray-700);
+
+            &:hover {
+                box-shadow: 0 0 14px -4px var(--color-gray-900);
+            }
+
+
+            .bestseller {
+                position: absolute;
+                top: 1rem;
+                left: 1rem;
+                background-color: var(--color-success-dark);
+                color: var(--color-white);
+                padding: 4px 12px;
+                border-radius: 4px;
+            }
+
+            .bookmark {
+                position: absolute;
+                top: 1rem;
+                right: 1rem;
+                z-index: 999;
+            }
+
+            img {
+                width: 100%;
+            }
+
+            .content {
+                padding: 1rem 2rem;
+
+                .title {
+                    font-size: 20px;
+                }
+
+                .author {
+                    font-size: 14px;
+                    margin: 0.5rem 0;
+                }
+
+                .pricing {
                     display: flex;
-                    flex-direction: column;
-                    align-items: stretch;
-                    overflow: hidden;
-                    height: 500px;
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                    gap: 1rem;
+                    font-size: 18px;
+                    font-weight: 600;
 
-                    .best-seller {
-                        position: absolute;
-                        top: 10px;
-                        left: 10px;
-                        background-color: #22C55E;
-                        color: white;
-                        padding: 5px 10px;
-                        border-radius: 5px;
-                        z-index: 1;
+                    .discount {
+                        color: var(--color-danger-dark);
+                        font-size: 18px;
+                        font-weight: 600;
                     }
 
-                    img {
-                        border-top-left-radius: 10px;
-                        border-top-right-radius: 10px;
-                        width: 100%;
-                        height: auto;
+                    .original {
+                        color: var(--color-theme);
+                        font-size: 18px;
+                        font-weight: 600;
                     }
 
-                    .course-title {
-                        margin: 0;
-                        height: 30px;
-                        margin-top: 10px;
-                        margin-bottom: 10px;
-                        padding: 10px;
+                    .discount-enabled {
+                        color: var(--color-gray-600);
+                        text-decoration: line-through;
+                        font-size: 18px;
+                        font-weight: 400;
                     }
+                }
 
-                    .content {
-                        flex-grow: 1;
-                        display: flex;
-                        flex-direction: column;
-                        justify-content: space-evenly;
-                        padding: 10px;
+                .footer {
+                    color: var(--color-gray-600);
+                    border-top: 1px solid var(--color-gray-400);
+                    display: flex;
+                    gap: 2rem;
+                    margin-top: 1rem;
+                    padding-top: 1rem;
 
-
-
-                        .course-author {
-                            margin-top: 10px;
+                    .hours {
+                        i {
+                            margin-right: 5px;
                         }
+                    }
 
-                        .course-prices {
-                            display: flex;
-                            padding: 5px;
-                            font-weight: bold;
-                            font-size: 18px;
-
-                            .course-price {
-                                color: #6366F1;
-                            }
-
-                            .course-discount {
-                                color: $danger;
-                            }
-
-                            .course-price-reduced {
-                                margin-left: 10px;
-                                text-decoration: line-through;
-                                color: $gray-600;
-                            }
-                        }
-
-                        .course-info {
-                            padding: 5px;
-                            display: flex;
-                            justify-content: space-between;
-                            border-top: 1px #E2E5F1 solid;
-
-
-                            .course-hour {
-                                margin: 0;
-                                margin-top: 10px;
-
-                                i {
-                                    margin-right: 5px;
-                                }
-                            }
-
-                            .course-likes {
-                                margin-top: 10px;
-
-                                span {
-                                    margin-right: 5px;
-                                }
-                            }
+                    .likes {
+                        i {
+                            margin-right: 5px;
                         }
                     }
                 }

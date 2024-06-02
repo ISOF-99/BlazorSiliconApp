@@ -1,5 +1,3 @@
-﻿@import '../core/_media.scss';
-
 #signup {
     height: 100%;
 
@@ -9,55 +7,64 @@
         align-items: center;
         height: 100%;
 
-        @include lg {
+        .include lg {
             width: 60%;
         }
 
-        @include xl {
-            width: 40%;
+        .include xl {
+            width: 45%;
         }
 
         form {
-            padding: 1rem;
+            width: 100%;
+            display: grid;
+            gap: 0;
+
+
 
             .content {
                 display: grid;
                 gap: 1rem 2rem;
-                grid-template-columns: 1fr;
-                grid-template-areas: "firstname" "lastname" "email" "password" "confirm" "term" "button";
 
 
-                @include md {
+
+                .include md {
                     grid-template-columns: 1fr 1fr;
-                    grid-template-areas: "firstname lastname" "email email" "password password" "confirm confirm" "term term" "button button";
+                    grid-template-areas:
+                        "firstname lastname" 
+                        "email email" 
+                        "password password" 
+                        "confirm confirm" 
+                        "terms terms" 
+                        "button button"
                 }
 
                 #form-firstname {
-                    grid-area: firstname;
+                    grid-area: firstname
                 }
 
                 #form-lastname {
-                    grid-area: lastname;
+                    grid-area: lastname
                 }
 
                 #form-email {
-                    grid-area: email;
+                    grid-area: email
                 }
 
                 #form-password {
-                    grid-area: password;
+                    grid-area: password
                 }
 
-                #form-confirmpassword {
-                    grid-area: confirm;
+                #form-confirm {
+                    grid-area: confirm
                 }
 
                 #form-terms {
-                    grid-area: term;
-                    padding: 1rem 0;
+                    grid-area: terms
                 }
-                #form-submit {
-                    grid-area: button;
+
+                #form-button {
+                    grid-area: button
                 }
             }
         }
